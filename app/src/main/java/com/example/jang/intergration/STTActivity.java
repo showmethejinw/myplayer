@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -62,13 +63,16 @@ public class STTActivity extends Activity implements RecognitionListener {
     private static final String KEYPHRASE2 = "hi girl";
     /* Used to handle permission request */
     private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 1;
+    private static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 2;
+    private static final int PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 3;
+    private static final int PERMISSIONS_REQUEST_LOCATION = 4;
 
     private SpeechRecognizer recognizer;
     private HashMap<String, Integer> captions;
 
     private String text;
-    private boolean test = true;
-//    private  boolean test = false;
+//    private boolean test = true;
+    private  boolean test = false;
 
     /**
      * 비디오 관련 변수
@@ -89,9 +93,11 @@ public class STTActivity extends Activity implements RecognitionListener {
         super.onCreate(state);
         setContentView(R.layout.main);
 
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         data = new SparseArray<>();
 //        boolean test = true;
-//        boolean test = false;
+        boolean test = false;
         try {
             ytInfoUrl = "http://www.youtube.com/get_video_info?video_id=" + youtubeID + "&eurl="
                     + URLEncoder.encode("https://youtube.googleapis.com/v/" + youtubeID, "UTF-8");
@@ -111,6 +117,7 @@ public class STTActivity extends Activity implements RecognitionListener {
                 public void onSuccess(YouTubeExtractor.YouTubeExtractorResult result) {
                     uri = result.getVideoUri();
                     uri.getPath();
+
                 }
 
                 @Override
@@ -122,7 +129,12 @@ public class STTActivity extends Activity implements RecognitionListener {
 //            data.put(data.size(), sPath + "videoplayback.mp4");
 //            data.put(data.size(), "https://manifest.googlevideo.com/api/manifest/hls_playlist/id/8lLLOnyELak.0/itag/95/source/yt_live_broadcast/requiressl/yes/ratebypass/yes/live/1/cmbypass/yes/goi/160/sgoap/gir%3Dyes%3Bitag%3D140/sgovp/gir%3Dyes%3Bitag%3D136/hls_chunk_host/r2---sn-3u-bh2ll.googlevideo.com/gcr/kr/playlist_type/DVR/mm/32/mn/sn-3u-bh2ll/ms/lv/mv/u/pl/23/dover/6/upn/IlK54lQ_d-0/mt/1481874094/ip/125.131.73.149/ipbits/0/expire/1481895797/sparams/ip,ipbits,expire,id,itag,source,requiressl,ratebypass,live,cmbypass,goi,sgoap,sgovp,hls_chunk_host,gcr,playlist_type,mm,mn,ms,mv,pl/signature/46FAEF2DA1A37107D0671E0A60B17CB01BAB25C4.94592B8CA836DAEAED486838CE94A90821D066BE/key/dg_yt0/playlist/index.m3u8");
 //            data.put(data.size(), "https://manifest.googlevideo.com/api/manifest/hls_playlist/id/EfkA3lwB0W0.0/itag/95/source/yt_live_broadcast/requiressl/yes/ratebypass/yes/live/1/cmbypass/yes/goi/160/sgoap/gir%3Dyes%3Bitag%3D140/sgovp/gir%3Dyes%3Bitag%3D136/hls_chunk_host/r4---sn-3u-bh2d.googlevideo.com/playlist_type/DVR/gcr/kr/mm/32/mn/sn-3u-bh2d/ms/lv/mv/m/pcm2cms/yes/pl/23/dover/6/upn/MV4yKHDV1CE/mt/1481874669/ip/125.131.73.149/ipbits/0/expire/1481896313/sparams/ip,ipbits,expire,id,itag,source,requiressl,ratebypass,live,cmbypass,goi,sgoap,sgovp,hls_chunk_host,playlist_type,gcr,mm,mn,ms,mv,pcm2cms,pl/signature/6A9462AC36A13E68D20B006C0C9EB42C5377F64A.0440AB23B9020301BDDFB91241492C0FA4B4D045/key/dg_yt0/playlist/index.m3u8");
-            data.put(data.size(), "https://r4---sn-oguelned.googlevideo.com/videoplayback?gcr=kr&ipbits=0&dur=417.030&ratebypass=yes&expire=1481892925&ip=125.131.73.149&requiressl=yes&sparams=dur,expire,gcr,id,initcwndbps,ip,ipbits,itag,lmt,mime,mm,mn,ms,mv,nh,pcm2cms,pl,ratebypass,requiressl,source,upn&id=o-APo6xEClZBVngskAzDcPHEdAoA0DZibxLBjXOCY3ISBI&pl=23&lmt=1481033106249952&upn=nnAdBBU6NT4&source=youtube&itag=18&mime=video%2Fmp4&key=cms1&signature=4673844DFF502C81BF55C84A5337AB12B094DE31.639BE9C2BF9DDB5C1DCE97FCA6A2E234B2930641&req_id=4faa354884b6a3ee&redirect_counter=2&cm2rm=sn-i3b677z&cms_redirect=yes&mm=34&mn=sn-oguelned&ms=ltu&mt=1481871278&mv=u&nh=IgpwcjAzLm5ydDEwKgkxMjcuMC4wLjE");
+//            data.put(data.size(), "https://r4---sn-oguelned.googlevideo.com/videoplayback?gcr=kr&ipbits=0&dur=417.030&ratebypass=yes&expire=1481892925&ip=125.131.73.149&requiressl=yes&sparams=dur,expire,gcr,id,initcwndbps,ip,ipbits,itag,lmt,mime,mm,mn,ms,mv,nh,pcm2cms,pl,ratebypass,requiressl,source,upn&id=o-APo6xEClZBVngskAzDcPHEdAoA0DZibxLBjXOCY3ISBI&pl=23&lmt=1481033106249952&upn=nnAdBBU6NT4&source=youtube&itag=18&mime=video%2Fmp4&key=cms1&signature=4673844DFF502C81BF55C84A5337AB12B094DE31.639BE9C2BF9DDB5C1DCE97FCA6A2E234B2930641&req_id=4faa354884b6a3ee&redirect_counter=2&cm2rm=sn-i3b677z&cms_redirect=yes&mm=34&mn=sn-oguelned&ms=ltu&mt=1481871278&mv=u&nh=IgpwcjAzLm5ydDEwKgkxMjcuMC4wLjE");
+//            data.put(data.size(), "https://manifest.googlevideo.com/api/manifest/hls_playlist/id/GP8RDf_q_tQ.0/itag/94/source/yt_live_broadcast/requiressl/yes/ratebypass/yes/live/1/cmbypass/yes/goi/160/sgoap/gir%3Dyes%3Bitag%3D140/sgovp/gir%3Dyes%3Bitag%3D135/hls_chunk_host/r6---sn-3u-bh2y.googlevideo.com/playlist_type/DVR/gcr/kr/mm/32/mn/sn-3u-bh2y/ms/lv/mv/u/pl/23/dover/6/upn/LcvfviCZKdg/mt/1482050097/ip/125.131.73.162/ipbits/0/expire/1482071777/sparams/ip,ipbits,expire,id,itag,source,requiressl,ratebypass,live,cmbypass,goi,sgoap,sgovp,hls_chunk_host,playlist_type,gcr,mm,mn,ms,mv,pl/signature/6513F40B62263778163AB07AB7A0C6BB03C928BA.364AC92F333FEF9A4C175E27B1822398CB8A99A0/key/dg_yt0/playlist/index.m3u8");
+            data.put(data.size(), sPath + "index.mp4");
+//            data.put(data.size(), "https://r7---sn-3u-bh2es.googlevideo.com/videoplayback?key=yt6&ip=125.131.73.162&lmt=1481979431837436&dur=303.182&itag=22&id=o-ADbGyWIuM_-e-PxlWWzS5UWMnnF5BZEZYoCCqfga_N8V&requiressl=yes&mm=31&mn=sn-3u-bh2es&ipbits=0&mt=1482050822&mv=m&ei=Tk1WWNOMPIWC4gK6joWoCg&ms=au&signature=1E00D2E078C4A33F5AE409AF71CA95DF8E96E805.0E09BE89BCA5CA515F105B17AA086B1FB65F309E&expire=1482072495&initcwndbps=4600000&source=youtube&pl=23&ratebypass=yes&mime=video%2Fmp4&upn=jBxyJ7D_heQ&sparams=dur%2Cei%2Cid%2Cinitcwndbps%2Cip%2Cipbits%2Citag%2Clmt%2Cmime%2Cmm%2Cmn%2Cms%2Cmv%2Cpl%2Cratebypass%2Crequiressl%2Csource%2Cupn%2Cexpire");
+//            data.put(data.size(), uri.toString());
+//            data.put(data.size(), "https://manifest.googlevideo.com/api/manifest/hls_playlist /;;;;;;;;;;;/id/GP8RDf_q_tQ.0/itag/91/source/yt_live_broadcast/requiressl/yes/ratebypass/yes/live/1/cmbypass/yes/goi/160/sgoap/gir%3Dyes%3Bitag%3D139/sgovp/gir%3Dyes%3Bitag%3D160/hls_chunk_host/r8---sn-3u-bh2ek.googlevideo.com/gcr/kr/playlist_type/DVR/mm/32/mn/sn-3u-bh2ek/ms/lv/mv/m/pl/23/dover/6/upn/LtPgRfqt5ig/mt/1482051191/ip/125.131.73.162/ipbits/0/expire/1482072828/sparams/ip,ipbits,expire,id,itag,source,requiressl,ratebypass,live,cmbypass,goi,sgoap,sgovp,hls_chunk_host,gcr,playlist_type,mm,mn,ms,mv,pl/signature/46B2CA8718F91074B766409742F7760CC15E7739.6751BC758F504F2B9493467F446F3AB99ED48D59/key/dg_yt0/playlist/index.m3u8");
         } else {
             data.put(data.size(), "http://199.21.149.43:9083/live/CA42-live1/cX/Iu/cXIuLIgTUuG1XxsBCHPF0A==/live.m3u8");
             data.put(data.size(), sPath + "sample360_2.mp4");
@@ -167,6 +179,50 @@ public class STTActivity extends Activity implements RecognitionListener {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSIONS_REQUEST_RECORD_AUDIO);
             return;
         }
+
+        permissionCheck = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+            return;
+        }
+
+        permissionCheck = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE);
+        if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+            return;
+        }
+
+        permissionCheck = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION);
+        if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_LOCATION);
+            return;
+        }
+
+
+
+
+
+
+//        if (ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+//
+//            // 이 권한을 필요한 이유를 설명해야하는가?
+//            if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_CONTACTS)) {
+//
+//                // 다이어로그같은것을 띄워서 사용자에게 해당 권한이 필요한 이유에 대해 설명합니다
+//                // 해당 설명이 끝난뒤 requestPermissions()함수를 호출하여 권한허가를 요청해야 합니다
+//
+//            } else {
+//
+//                ActivityCompat.requestPermissions(this,
+//                        new String[]{Manifest.permission.READ_CONTACTS},
+//                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+//
+//                // 필요한 권한과 요청 코드를 넣어서 권한허가요청에 대한 결과를 받아야 합니다
+//
+//            }
+//        }
+
+
 //        runRecognizerSetup();
 //        startService(new Intent(STTActivity.this, BackgroundService.class));
     }
@@ -210,6 +266,24 @@ public class STTActivity extends Activity implements RecognitionListener {
             } else {
                 finish();
             }
+        }else if(requestCode == PERMISSIONS_REQUEST_LOCATION){
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+
+            }
+            else
+                finish();
+        }else if(requestCode == PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE){
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+
+            }
+            else
+                finish();
+        }else if(requestCode == PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE){
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+
+            }
+            else
+                finish();
         }
     }
 
@@ -368,6 +442,13 @@ public class STTActivity extends Activity implements RecognitionListener {
     }
 
     public void changeChannel() {
+        setContentView(R.layout.first_image_layout);
+        try{
+            Thread.sleep(3000);
+        }catch (Exception e)
+        {
+
+        }
         MD360PlayerActivity.startVideo(STTActivity.this, Uri.parse(data.get(MD360PlayerActivity.number++ % data.size())));
     }
 }

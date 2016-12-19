@@ -4,10 +4,13 @@
     <TextureView
         android:id="@+id/video_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="@drawable/first_image"/>
     <ProgressBar
         android:layout_centerInParent="true"
         android:id="@+id/progress"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        />
+
 </FrameLayout>

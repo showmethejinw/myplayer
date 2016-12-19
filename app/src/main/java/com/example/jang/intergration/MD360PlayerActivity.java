@@ -32,6 +32,7 @@ import com.asha.vrlib.texture.MD360BitmapTexture;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 
 public abstract class MD360PlayerActivity extends Activity {
@@ -46,11 +47,14 @@ public abstract class MD360PlayerActivity extends Activity {
     public static int number = 1;
     public static Activity activity;
 
+    public static SparseArray<String> data;
+
+
     static {
 //        sDisplayMode.put(MDVRLibrary.DISPLAY_MODE_NORMAL, "NORMAL");
         sDisplayMode.put(MDVRLibrary.DISPLAY_MODE_GLASS, "GLASS");
 
-//        sInteractiveMode.put(MDVRLibrary.INTERACTIVE_MODE_MOTION,"MOTION");
+        sInteractiveMode.put(MDVRLibrary.INTERACTIVE_MODE_MOTION,"MOTION");
         sInteractiveMode.put(MDVRLibrary.INTERACTIVE_MODE_TOUCH, "TOUCH");
         sInteractiveMode.put(MDVRLibrary.INTERACTIVE_MODE_MOTION_WITH_TOUCH, "M & T");
         sInteractiveMode.put(MDVRLibrary.INTERACTIVE_MODE_CARDBORAD_MOTION, "CARDBOARD M");
@@ -117,6 +121,8 @@ public abstract class MD360PlayerActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        data = new SparseArray<>();
+
 
 
         // no title
@@ -125,13 +131,17 @@ public abstract class MD360PlayerActivity extends Activity {
         // full screen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         // set content view
         setContentView(R.layout.activity_md_using_surface_view);
 
         // init VR Library
         mVRLibrary = createVRLibrary();
+
         addplugin();
+
+
         final List<View> hotspotPoints = new LinkedList<>();
         hotspotPoints.add(findViewById(R.id.hotspot_point1));
         hotspotPoints.add(findViewById(R.id.hotspot_point2));
@@ -271,8 +281,32 @@ public abstract class MD360PlayerActivity extends Activity {
                 String text = hotspot == null ? "1" : String.format(Locale.CHINESE, "%s  %fs", hotspot.getTitle(), (System.currentTimeMillis() - hitTimestamp) / 1000.0f);
                 hotspotText.setText(text);
 
+//                hotspotText.setText(hotspot.getTitle());
 
                 if ((System.currentTimeMillis() - hitTimestamp) / 1000.0f < 3) {
+
+
+                    Random random = new Random();
+
+                    int rannum = random.nextInt(5);
+//                    finish();
+                    if(rannum == 0)
+                        setContentView(R.layout.introduce_program_layout1);
+                    else if(rannum == 1)
+                        setContentView(R.layout.introduce_program_layout2);
+                    else if(rannum == 2)
+                        setContentView(R.layout.introduce_program_layout3);
+                    else if(rannum == 3)
+                        setContentView(R.layout.introduce_program_layout4);
+                    else if(rannum == 4)
+                        setContentView(R.layout.introduce_program_layout5);
+
+                    try{
+                        Thread.sleep(3000);
+                    }catch (Exception e)
+                    {
+
+                    }
                     finish();
                     MD360PlayerActivity.startVideo(MD360PlayerActivity.this, Uri.parse(STTActivity.data.get(MD360PlayerActivity.number++ % STTActivity.data.size())));
 

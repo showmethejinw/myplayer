@@ -36,7 +36,11 @@
         android:id="@+id/button"
         android:text="Start\nStreaming"
         android:layout_gravity="center"
-        android:gravity="center"/>
+        android:gravity="top"
+        android:textColor="#00FFFF"
+        android:background="@drawable/first_image"
+        android:elegantTextHeight="true"
+        />
 </LinearLayout>
 
 
